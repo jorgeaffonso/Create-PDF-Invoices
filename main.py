@@ -14,10 +14,10 @@ for filepath in filepaths:
     invoice_nr, date = filename.split(sep='-')
 
     pdf.set_font(family="Times", style="B", size=16)
-    pdf.cell(w=0, h=12, txt=f"Invoice_nr.{invoice_nr}", align="L", ln=1, border=0)
+    pdf.cell(w=50, h=8, txt=f"Invoice_nr.{invoice_nr}",ln=1)
 
     pdf.set_font(family="Times", style="B", size=16)
-    pdf.cell(w=0, h=12, txt=f"Date: {date}", align="L", ln=1, border=0)
+    pdf.cell(w=50, h=8, txt=f"Date: {date}", align="L", ln=1, border=0)
 
     df = pd.read_excel(filepath, sheet_name="Sheet 1")
 
@@ -47,5 +47,24 @@ for filepath in filepaths:
         pdf.cell(w=30, h=8, txt=str(row["amount_purchased"]), border=1)
         pdf.cell(w=30, h=8, txt=str(row["price_per_unit"]), border=1)
         pdf.cell(w=30, h=8, txt=str(row["total_price"]), border=1, ln=1)
+
+
+    # Add the sum of total price in a last row
+    total_sum = df["total_price"].sum()
+    pdf.set_font(family="Times", size=10)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=70, h=8, txt="", border=1)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=30, h=8, txt="", border=1)
+    pdf.cell(w=30, h=8, txt=str(total_sum), border=1, ln=1)
+
+    # Add total price sentence
+    pdf.set_font(family="Times", size=10, style="B")
+    pdf.cell(w=30, h=8, txt=f"The total price is {total_sum}", ln=1)
+
+    # Add Company name and logo
+    pdf.set_font(family="Times", size=10, style="B")
+    pdf.cell(w=20, h=8, txt="PythonHow")
+    pdf.image("pythonhow.png", w=10)
 
     pdf.output(f"PDFs\{filename}.pdf")
